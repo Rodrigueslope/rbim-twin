@@ -5,7 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gêmeo Digital CREA-SE | RBIM</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Chart.js CDN para o gráfico -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Script de lógica -->
   <script defer src="script.js"></script>
+
+  <style>
+    .blinking {
+      animation: alertaPisca 1s infinite;
+    }
+    @keyframes alertaPisca {
+      0%   { filter: drop-shadow(0 0 0 orange); }
+      50%  { filter: drop-shadow(0 0 10px orange); }
+      100% { filter: drop-shadow(0 0 0 orange); }
+    }
+
+    #grafico-temperatura {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -32,5 +57,79 @@
       <p id="hum-value">-- %</p>
     </div>
   </div>
+
+  <!-- Gráfico de temperatura -->
+  <canvas id="grafico-temperatura" width="600" height="200"></canvas>
+
+  <script>
+    const TELHADO_ID = "cc4f5c1c944da13c6909f46edcefc422";
+
+    function aplicarAlertaTelhado() {
+      const iframe = document.getElementById("speckle-viewer");
+      if (!iframe || !iframe.contentWindow) return;
+
+      try {
+        const viewer = iframe.contentWindow.document;
+        const telhado = viewer.querySelector(`[data-object-id="${TELHADO_ID}"]`);
+        if (telhado) {
+          telhado.classList.add("blinking");
+        }
+      } catch (e) {
+        console.warn("Aguardando carregamento do viewer...");
+      }
+    }
+
+    window.onload = () => {
+      setTimeout(aplicarAlertaTelhado, 3000);
+    };
+
+    // GRÁFICO DINÂMICO
+    const ctx = document.getElementById('grafico-temperatura').getContext('2d');
+    const graficoTemperatura = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Temperatura (°C)',
+          data: [],
+          borderColor: 'orange',
+          backgroundColor: 'rgba(255,165,0,0.2)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Horário'
+            }
+          },
+          y: {
+            beginAtZero: false,
+            title: {
+              display: true,
+              text: 'Temperatura (°C)'
+            }
+          }
+        }
+      }
+    });
+
+    setInterval(() => {
+      const hora = new Date().toLocaleTimeString();
+      const temp = 25 + Math.random() * 5; // Simula entre 25°C e 30°C
+      graficoTemperatura.data.labels.push(hora);
+      graficoTemperatura.data.datasets[0].data.push(temp);
+      if (graficoTemperatura.data.labels.length > 10) {
+        graficoTemperatura.data.labels.shift();
+        graficoTemperatura.data.datasets[0].data.shift();
+      }
+      graficoTemperatura.update();
+    }, 30000);
+  </script>
 </body>
 </html>
+
