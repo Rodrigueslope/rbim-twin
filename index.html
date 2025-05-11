@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gêmeo Digital CREA-SE | RBIM</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header>
+    <img src="RBIM.png" alt="Logo RBIM" class="logo">
+    <h1>Gêmeo Digital CREA-SE</h1>
+  </header>
+
+  <div class="viewer-wrapper">
+    <iframe
+      id="speckle-viewer"
+      src="https://app.speckle.systems/projects/0d27c6ca0a/models/a10185a708#embed=%7B%22isEnabled%22%3Atrue%7D"
+      frameborder="0"
+    ></iframe>
+    <div id="alerta-overlay"></div>
+  </div>
+
+  <div class="dashboard">
+    <div class="sensor">
+      <h3>Temperatura</h3>
+      <p id="temp-value">-- °C</p>
+    </div>
+    <div class="sensor">
+      <h3>Umidade</h3>
+      <p id="hum-value">-- %</p>
+    </div>
+  </div>
+</body>
+</html>
